@@ -1,5 +1,9 @@
+"""Simple interpreter for the PostFix language
+
+"""
+
+
 import operator
-import sys
 
 class Command(object):
     def __init__(self, kind, argument=None):
@@ -21,8 +25,9 @@ class Command(object):
             _check_two_integers_on_top(stack)
             y = stack.pop()
             x = stack.pop()
-            _check_not_dividing_by_zero(self.kind, y)
-            stack.append(operator.__dict__[self.kind](x, y))
+            op = 'mod' if self.kind == 'rem' else self.kind
+            _check_not_dividing_by_zero(x, y)
+            stack.append(operator.__dict__[op](x, y))
         elif self.kind == 'pop':
             _check_minimum_length(stack, 1)
             stack.pop()
@@ -37,15 +42,17 @@ class Command(object):
             x = stack.pop()
             stack.append(x if condition else y)
         elif self.kind == 'get':
-            #
-            # TODO
-            #
-            pass
+            _check_integer_on_top(stack)
+            index = stack.pop()
+            _check_minimum_length(stack, index)
+            stack.append(stack[~index])
         elif self.kind == 'put':
-            #
-            # TODO
-            #
-            pass
+            _check_minimum_length(stack, 2)
+            _check_integer_on_top(stack)
+            index = stack.pop()
+            value = stack.pop()
+            _check_minimum_length(stack, index)
+            stack[~index] = value
         elif self.kind == 'prs':
             _check_string_on_top(stack)
             print stack.pop()
@@ -59,8 +66,7 @@ class Command(object):
 
 def _check(condition, message):
     if not condition:
-        sys.stderr.write(message + '\n')
-        sys.exit(1)
+        raise(Exception, message)
 
 def _check_minimum_length(stack, expected_length):
     _check(len(stack) >= expected_length, 'Expected stack to have %d items' % expected_length)
@@ -76,7 +82,7 @@ def _check_integer_on_top(stack):
 
 def _check_string_on_top(stack):
     _check_minimum_length(stack, 1)
-    _check(type(stack[-1]) in (str, unicode), 'Expected integer on top of stack')
+    _check(type(stack[-1]) in (str, unicode), 'Expected string on top of stack')
 
 def _check_command_list_on_top(stack):
     _check_minimum_length(stack, 1)
@@ -93,9 +99,10 @@ def run(commands, stack, debug=False):
         if debug:
             print 'Commands:', commands
             print 'Stack', stack
+            print '--------'
         command = commands.pop(0)
         command.execute(commands, stack)
-    if stack:
-        if debug:
-            print 'Returning', stack[-1]
-        return stack[-1]
+    program_result = stack[-1] if stack else None
+    if debug:
+        print 'Returning', stack[-1]
+    return program_result
