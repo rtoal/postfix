@@ -87,19 +87,15 @@ def _check_not_dividing_by_zero(kind, divisor):
     _check(kind not in ('div','rem') or divisor != 0, 'Divide by zero error')
 
 
-def run(commands, stack):
-    print 'PROGRAM START'
+def run(commands, stack, debug=False):
     commands = commands[:]
     while commands:
-        print
-        print 'Commands:', commands
-        print 'Stack', stack
+        if debug:
+            print 'Commands:', commands
+            print 'Stack', stack
         command = commands.pop(0)
         command.execute(commands, stack)
     if stack:
-        print 'Returning', stack[-1]
+        if debug:
+            print 'Returning', stack[-1]
         return stack[-1]
-
-
-if __name__ == '__main__':
-    run([Command('INT', 100), Command('add'), Command('pri')], [2])
