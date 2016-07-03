@@ -10,15 +10,14 @@ def test_trivial_pushes_and_pops():
     assert run([1, 'pop'], []) is None
     assert run(['pop'], [5]) is None
 
-def test_exception_raised_when_stack_not_big_enough():
-    tests = [
-        (['swap'], [5]),
-        ([4, 'mul', 'add'], [3]),
-        ([4, 'sub', 'div'], [3, 4]),
-        ]
-    for program, stack in tests:
-        with pytest.raises(Exception):
-            run(program, stack)
+def test_insufficient_stack_sizes_are_detected():
+    assert run(['swap'], [5]) == 'STACK_SIZE_UNDER_2'
+    assert run([4, 'mul', 'add'], [3]) == 'STACK_SIZE_UNDER_2'
+    assert run([1, 'ge'], []) == 'STACK_SIZE_UNDER_2'
+    assert run(['pop'], []) == 'STACK_SIZE_UNDER_1'
+
+def test_divide_by_zero_is_caught():
+    assert run([4, 'sub', 'div'], [3, 4]) == 'DIVIDE_BY_ZERO'
 
 def test_arithmetic_commands():
     assert run([17, 4, 'rem'], []) == 1
