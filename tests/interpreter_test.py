@@ -36,3 +36,9 @@ def test_average_program_works():
     assert run(program, [75, -25]) == 25
     assert run(program, [-30, -20]) == -25
     assert run(program, [6, 7]) == 6
+
+def test_some_programs_from_the_tetxbook():
+    assert run([2, 3, 'sel'], [1]) == 2
+    assert run([2, 3, 'sel'], [0]) == 3
+    assert run([2, 3, 'sel'], [17]) == 2
+    assert run([[2, 'mul'], 3, 4, 'sel'], []) == 'INT_EXPECTED'

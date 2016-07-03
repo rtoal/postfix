@@ -7,7 +7,8 @@ def execute(command, commands, stack):
     if isinstance(command, int) or isinstance(command, list):
         stack.append(command)
     elif command in ['le', 'lt', 'eq', 'ne', 'ge', 'gt', 'add', 'sub', 'mul', 'div', 'rem']:
-        _check_two_integers_on_top(stack)
+        _check_integer(stack, 1)
+        _check_integer(stack, 2)
         y = stack.pop()
         x = stack.pop()
         if command in ('div', 'rem'):
@@ -21,20 +22,19 @@ def execute(command, commands, stack):
         _check_minimum_length(stack, 2)
         stack[-1], stack[-2] = stack[-2], stack[-1]
     elif command == 'sel':
-        _check_minimum_length(stack, 3)
-        _check_integer_on_top(stack)
-        condition = stack.pop()
-        y = stack.pop()
+        _check_integer(stack, 3)
         x = stack.pop()
-        stack.append(x if condition else y)
+        y = stack.pop()
+        condition = stack.pop()
+        stack.append(y if condition else x)
     elif command == 'get':
-        _check_integer_on_top(stack)
+        _check_integer(stack)
         index = stack.pop()
         _check_minimum_length(stack, index)
         stack.append(stack[~index])
     elif command == 'put':
         _check_minimum_length(stack, 2)
-        _check_integer_on_top(stack)
+        _check_integer(stack)
         index = stack.pop()
         value = stack.pop()
         _check_minimum_length(stack, index)
@@ -51,14 +51,9 @@ def _check(condition, message):
 def _check_minimum_length(stack, expected_length):
     _check(len(stack) >= expected_length, 'STACK_SIZE_UNDER_{}'.format(expected_length))
 
-def _check_two_integers_on_top(stack):
-    _check_minimum_length(stack, 2)
-    _check_integer_on_top(stack)
-    _check(isinstance(stack[-2], int), 'INT_EXPECTED')
-
-def _check_integer_on_top(stack):
-    _check_minimum_length(stack, 1)
-    _check(isinstance(stack[1], int), 'INT_EXPECTED')
+def _check_integer(stack, pos=1):
+    _check_minimum_length(stack, pos)
+    _check(isinstance(stack[-pos], int), 'INT_EXPECTED')
 
 def _check_list_on_top(stack):
     _check_minimum_length(stack, 1)
