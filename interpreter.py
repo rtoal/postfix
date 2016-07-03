@@ -13,7 +13,7 @@ def execute(command, commands, stack):
         x = stack.pop()
         if command in ('div', 'rem'):
             _check_not_dividing_by_zero(command, y)
-            command = 'floordiv' if command == 'div' else 'mod'
+            command = {'div': 'floordiv', 'rem': 'mod'}[command]
         stack.append(int(operator.__dict__[command](x, y)))
     elif command == 'pop':
         _check_minimum_length(stack, 1)
@@ -27,7 +27,7 @@ def execute(command, commands, stack):
         y = stack.pop()
         condition = stack.pop()
         stack.append(y if condition else x)
-    elif command == 'get':
+    elif command == 'nget':
         _check_integer(stack)
         index = stack.pop()
         _check_minimum_length(stack, index)
@@ -66,7 +66,7 @@ def _check_not_dividing_by_zero(command, divisor):
 def run(commands, *stack):
     try:
         commands = commands[:]
-        stack = list(stack)
+        stack = list(reversed(stack))
         while commands:
             command = commands.pop(0)
             execute(command, commands, stack)

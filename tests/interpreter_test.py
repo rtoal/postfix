@@ -9,14 +9,24 @@ def test_trivial_pushes_and_pops():
     assert run([1, 'pop']) is None
     assert run(['pop'], 5) is None
 
+def test_swaps():
+    assert run(['swap'], 3, 4) == 4
+    assert run(['pop', 'swap'], 3, 4, 5) == 5
+    assert run([1, 2, 'swap', 3, 'pop']) == 1
+
+def test_empty_program_returns_stack_top():
+    assert run([], 3, 4) == 3
+
 def test_insufficient_stack_sizes_are_detected():
-    assert run(['swap'], 5) == 'STACK_SIZE_UNDER_2'
+    assert run(['swap'], 3) == 'STACK_SIZE_UNDER_2'
     assert run([4, 'mul', 'add'], 3) == 'STACK_SIZE_UNDER_2'
     assert run([1, 'ge']) == 'STACK_SIZE_UNDER_2'
     assert run(['pop']) == 'STACK_SIZE_UNDER_1'
+    assert run([1, 'pop', 'pop']) == 'STACK_SIZE_UNDER_1'
 
 def test_divide_by_zero_is_caught():
-    assert run([4, 'sub', 'div'], 3, 4) == 'DIVIDE_BY_ZERO'
+    assert run([2, 0, 'div']) == 'DIVIDE_BY_ZERO'
+    assert run([4, 'sub', 'div'], 4, 5) == 'DIVIDE_BY_ZERO'
 
 def test_arithmetic_commands():
     assert run([17, 4, 'rem']) == 1
