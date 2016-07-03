@@ -63,9 +63,10 @@ def _check_not_dividing_by_zero(command, divisor):
     _check(command not in ('div','rem') or divisor != 0, 'DIVIDE_BY_ZERO')
 
 
-def run(commands, stack):
+def run(commands, *stack):
     try:
         commands = commands[:]
+        stack = list(stack)
         while commands:
             command = commands.pop(0)
             execute(command, commands, stack)
