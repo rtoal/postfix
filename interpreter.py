@@ -67,7 +67,6 @@ def run(commands, *stack):
         commands = commands[:]
         stack = list(reversed(stack))
         while commands:
-            print('C', list(commands), 'S', list(stack))
             command = commands.pop(0)
             execute(command, commands, stack)
         return 'NO_RESULT' if not stack else 'NON_INT_RESULT' if not isinstance(stack[-1], int) else stack[-1]
