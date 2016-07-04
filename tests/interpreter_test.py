@@ -26,6 +26,7 @@ def test_insufficient_stack_sizes_are_detected():
 def test_divide_by_zero_is_caught():
     assert run([2, 0, 'div']) == 'DIVIDE_BY_ZERO'
     assert run([4, 'sub', 'div'], 4, 5) == 'DIVIDE_BY_ZERO'
+    assert run([4, 'sub', 'rem'], 4, 5) == 'DIVIDE_BY_ZERO'
 
 def test_arithmetic_commands():
     assert run([4, 'sub'], 3) == -1
