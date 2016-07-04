@@ -30,8 +30,10 @@ def execute(command, commands, stack):
     elif command == 'nget':
         _check_integer(stack)
         index = stack.pop()
+        _check_positive_integer(index)
         _check_minimum_length(stack, index)
-        stack.append(stack[~index])
+        _check_integer(stack, index)           # Not allowed to access a non-int
+        stack.append(stack[-index])
     elif command == 'put':
         _check_minimum_length(stack, 2)
         _check_integer(stack)
@@ -41,7 +43,8 @@ def execute(command, commands, stack):
         stack[~index] = value
     elif command == 'exec':
         _check_list_on_top(stack)
-        commands.extend(command)
+        new_commands = stack.pop()
+        commands[:0] = new_commands
 
 
 def _check(condition, message):
@@ -54,6 +57,9 @@ def _check_minimum_length(stack, expected_length):
 def _check_integer(stack, pos=1):
     _check_minimum_length(stack, pos)
     _check(isinstance(stack[-pos], int), 'INT_EXPECTED')
+
+def _check_positive_integer(n):
+    _check(isinstance(n, int) and n >= 1, 'POSITIVE_INT_EXPECTED')
 
 def _check_list_on_top(stack):
     _check_minimum_length(stack, 1)
@@ -68,8 +74,9 @@ def run(commands, *stack):
         commands = commands[:]
         stack = list(reversed(stack))
         while commands:
+            print('C', list(commands), 'S', list(stack))
             command = commands.pop(0)
             execute(command, commands, stack)
-        return stack[-1] if stack else None
+        return 'NO_RESULT' if not stack else 'NON_INT_RESULT' if not isinstance(stack[-1], int) else stack[-1]
     except ValueError as e:
         return str(e)
