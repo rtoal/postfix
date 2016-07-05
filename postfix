@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import sys
+from interpreter import run
+
+if len(sys.argv) < 1:
+    sys.stderr.write('Syntax: postfix program s0 s1 ...\n')
+    sys.exit(1)
+
+try:
+    print(run(sys.argv[1], *[int(n) for n in sys.argv[2:]]))
+except ValueError as e:
+    sys.stderr.write('Arguments must be integers\n')
+    sys.exit(1)
