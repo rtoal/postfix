@@ -13,19 +13,17 @@ repo, run the tests with something like:
 python3 -m pytest -s -v tests
 ```
 
-To run the interpreter:
+You can run the interpreter from the command line. Supply the program
+as the first argument, with subsequent arguments (if any) comprising
+the initial stack (starting with the top element):
 
-```python
-from interpreter import run
-command = [['mul', 'sub'], [1, 'nget', 'mul'], 4, 'nget', 'swap', 'exec', 'swap', 'exec']]
-run(command, -10, 2)
-# => 42
+```
+$ ./postfix '((mul sub) (1 nget mul) 4 nget swap exec swap exec)' -10 2
+42
 
 ```
 
-The interpreter runs a list of commands on an initial stack, given as
-the second to last arguments of `run`, with the top of the stack first.
-You can also run a text-based program like so:
+You can also invoke the interpreter from within Python code like so:
  
 ```python
 from interpreter import run
