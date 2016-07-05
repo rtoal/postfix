@@ -7,7 +7,7 @@ def parse_program(source):
     tokens = tokenize(source)
     program = parse(tokens, next(tokens))
     if next(tokens) != 'END':
-        raise ValueError('Extra text after end of program')
+        raise ValueError('EXTRA_PROGRAM_TEXT')
     return program
 
 def parse(tokens, token):
@@ -21,9 +21,9 @@ def parse(tokens, token):
             token = next(tokens)
         return result
     elif token == ')':
-        raise ValueError('Unexpected ")"')
+        raise ValueError('UNEXPECTED_RIGHT_PAREN')
     elif token == 'END':
-        raise ValueError('Premature end of program')
+        raise ValueError('PREMATURE_END_OF_PROGRAM')
     else:
         return token
 
@@ -32,7 +32,7 @@ def tokenize(source):
     while start < len(source):
         m = TOKEN_REGEX.match(source, start)
         if m is None:
-            raise ValueError("Lexical Error")
+            raise ValueError('LEXICAL_ERROR')
         yield m.group(0).strip()
         start = m.end()
     yield 'END'

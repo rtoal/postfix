@@ -1,7 +1,5 @@
 from parser import parse_program
 
-def test_parsing_empty_program_fails():
-    pass
 
 def test_parses_single_number_program_okay():
     assert parse_program("808") == 808
@@ -25,10 +23,3 @@ def test_nested_expressions():
     assert parse_program("((1 2) 3)") == [[1, 2], 3]
     assert parse_program("(sub (sub sub) exec ())") == ['sub', ['sub', 'sub'], 'exec', []]
     assert parse_program("(() ())") == [[], []]
-
-def test_lexical_errors():
-    pass
-
-def test_premature_end_during_parsing():
-    pass
-

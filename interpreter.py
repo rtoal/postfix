@@ -1,6 +1,7 @@
 """Simple interpreter for the PostFix language"""
 
 import operator
+from parser import parse_program
 
 
 def execute(command, commands, stack):
@@ -62,9 +63,9 @@ def _check_positive_integer(value):
 def _check_list(value):
     _check(isinstance(value, list), 'LIST_EXPECTED')
 
-def run(commands, *stack):
+def run(source, *stack):
     try:
-        commands = commands[:]
+        commands = parse_program(source)
         stack = list(reversed(stack))
         while commands:
             command = commands.pop(0)
