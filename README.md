@@ -20,7 +20,6 @@ the initial stack (starting with the top element):
 ```
 $ ./postfix '((mul sub) (1 nget mul) 4 nget swap exec swap exec)' -10 2
 42
-
 ```
 
 You can also invoke the interpreter from within Python code like so:
